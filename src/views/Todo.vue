@@ -3,7 +3,7 @@
     <div class="column items-center justify-center">
       <div class="q-pa-md" style="max-width: 400px; width: 100%">
         <TodoForm />
-        <TodoList :list="list" />
+        <TodoList />
       </div>
     </div>
   </q-page>

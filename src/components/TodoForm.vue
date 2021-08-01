@@ -16,8 +16,8 @@
 <script lang="ts">
 import { useQuasar } from "quasar";
 import { defineComponent, Ref, ref } from "vue";
-import DatabaseService from "@/services/Database.service";
-import { RxHeroesDatabase } from "@/RxDB";
+import TodoDatabaseService from "@/services/TodoDatabase.service";
+import { ETodoStatus, RxTodosDatabase } from "@/interfaces/Todo";
 
 interface ISetup {
   name: Ref<string>;
@@ -41,17 +41,15 @@ export default defineComponent({
       async onSubmit() {
         console.log("OnSubmit");
         console.dir(this);
-        const db: RxHeroesDatabase = await DatabaseService.get();
+        const db: RxTodosDatabase = await TodoDatabaseService.get();
         const obj = {
+          id: name.value,
           name: name.value,
-          color: "#993322",
-          hp: 100,
-          maxHP: 1000,
-          skills: [],
+          status: ETodoStatus.ACTIVE,
         };
         console.dir(obj);
-        await db.heroes.insert(obj);
-        console.log("Inserted new hero: " + name.value);
+        await db.todos.insert(obj);
+        console.log("Inserted new todo: " + name.value);
 
         //
         $q.notify({

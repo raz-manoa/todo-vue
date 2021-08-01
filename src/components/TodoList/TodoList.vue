@@ -12,25 +12,53 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
-import { ITodo } from "@/interfaces/Todo";
+import { defineComponent, onMounted, onUnmounted, Ref, ref } from "vue";
+import { ITodo, RxTodoDocument } from "@/interfaces/Todo";
 import TodoListItem from "./TodoListItem/TodoListItem.vue";
+import TodoDatabaseService from "@/services/TodoDatabase.service";
+import { tap } from "rxjs/operators";
+import { Subscription } from "rxjs";
 
 interface ISetup {
+  list: Ref<RxTodoDocument[]>;
   handleRemoveItem: (item: ITodo) => void;
 }
 
 export default defineComponent({
   components: { TodoListItem },
   name: "TodoList",
-  props: {
-    list: {
-      type: Array as PropType<ITodo[]>,
-      default: () => [],
-    },
-  },
   setup(): ISetup {
+    const loading = ref(false);
+    const list = ref<RxTodoDocument[]>([]);
+    const sub = ref<Subscription | null>(null);
+
+    onMounted(async () => {
+      loading.value = true;
+      const db = await TodoDatabaseService.get();
+      sub.value = db.todos
+        .find({
+          selector: {},
+          sort: [{ name: "asc" }],
+        })
+        .$.pipe(
+          tap(() => {
+            // debounce to simulate slow load
+            setTimeout(() => (loading.value = false), 1000);
+          })
+        )
+        .subscribe((todos) => {
+          list.value = todos;
+        });
+    });
+    onUnmounted(() => {
+      if (sub.value) {
+        sub.value.unsubscribe();
+      }
+    });
+
     return {
+      // eslint-disable-next-line
+      list: list as ISetup["list"],
       handleRemoveItem: (item) => {
         console.log("item", item);
       },
