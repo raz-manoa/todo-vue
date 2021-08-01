@@ -30,10 +30,10 @@
 
 <script lang="ts">
 import { defineComponent, PropType, Ref, ref } from "vue";
-import { ETodoStatus, ITodo } from "@/interfaces/Todo";
+import { ETodoStatus, RxTodoDocument } from "@/interfaces/Todo";
 
 interface ISetup {
-  item: Ref<ITodo>;
+  item: Ref<RxTodoDocument>;
   ETodoStatus: typeof ETodoStatus;
   handleRemove: () => void;
 }
@@ -42,17 +42,17 @@ export default defineComponent({
   name: "TodoListItem",
   props: {
     data: {
-      type: Object as PropType<ITodo>,
+      type: Object as PropType<RxTodoDocument>,
       required: true,
     },
   },
   setup(props, context): ISetup {
-    const item = ref<ITodo>(props.data);
+    const item = ref<RxTodoDocument>(props.data);
     const { emit } = context;
 
     return {
       ETodoStatus,
-      item,
+      item: item as ISetup["item"],
       handleRemove() {
         emit("remove", item.value);
       },

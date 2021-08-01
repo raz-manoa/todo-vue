@@ -1,19 +1,37 @@
 <template>
   <div>
     <q-list bordered padding>
-      <TodoListItem
-        v-for="item in list"
-        :key="item.id"
-        :data="item"
-        @remove="handleRemoveItem"
-      />
+      <template v-if="!loading">
+        <TodoListItem
+          v-for="item in list"
+          :key="item.id"
+          :data="item"
+          @remove="handleRemoveItem"
+        />
+      </template>
+      <template v-else>
+        <q-item>
+          <q-item-section avatar>
+            <q-skeleton type="QAvatar" />
+          </q-item-section>
+
+          <q-item-section>
+            <q-item-label>
+              <q-skeleton type="text" />
+            </q-item-label>
+            <q-item-label caption>
+              <q-skeleton type="text" width="65%" />
+            </q-item-label>
+          </q-item-section>
+        </q-item>
+      </template>
     </q-list>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, onUnmounted, Ref, ref } from "vue";
-import { ITodo, RxTodoDocument } from "@/interfaces/Todo";
+import { RxTodoDocument } from "@/interfaces/Todo";
 import TodoListItem from "./TodoListItem/TodoListItem.vue";
 import TodoDatabaseService from "@/services/TodoDatabase.service";
 import { tap } from "rxjs/operators";
@@ -21,7 +39,8 @@ import { Subscription } from "rxjs";
 
 interface ISetup {
   list: Ref<RxTodoDocument[]>;
-  handleRemoveItem: (item: ITodo) => void;
+  loading: Ref<boolean>;
+  handleRemoveItem: (item: RxTodoDocument) => void;
 }
 
 export default defineComponent({
@@ -59,8 +78,10 @@ export default defineComponent({
     return {
       // eslint-disable-next-line
       list: list as ISetup["list"],
+      loading,
       handleRemoveItem: (item) => {
-        console.log("item", item);
+        item.remove();
+        console.log("remove item", item.name);
       },
     };
   },
