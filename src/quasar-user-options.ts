@@ -12,6 +12,6 @@ import "@quasar/extras/eva-icons/eva-icons.css";
 // To be used on app.use(Quasar, { ... })
 export default {
   config: {},
-  plugins: {},
+  plugins: ["Notify"],
   lang: lang,
 };

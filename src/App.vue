@@ -89,14 +89,13 @@
     </q-drawer>
 
     <q-page-container>
-      <HelloWorld />
+      <router-view />
     </q-page-container>
   </q-layout>
 </template>
 
 <script lang="ts">
 import { Ref, ref } from "vue";
-import HelloWorld from "./components/HelloWorld.vue";
 
 interface IAppSetupReturn {
   leftDrawerOpen: Ref<boolean>;
@@ -105,9 +104,7 @@ interface IAppSetupReturn {
 export default {
   name: "LayoutDefault",
 
-  components: {
-    HelloWorld,
-  },
+  components: {},
 
   setup(): IAppSetupReturn {
     return {
