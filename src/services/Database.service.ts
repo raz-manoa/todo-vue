@@ -63,6 +63,7 @@ async function _create(): Promise<RxHeroesDatabase> {
     // password: 'myLongAndStupidPassword' // no password needed
   });
   console.log("DatabaseService: created database");
+  // eslint-disable-next-line
   (window as any).db = db; // write to window for debugging
 
   // show leadership in title
