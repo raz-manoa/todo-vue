@@ -11,9 +11,9 @@
 
 <script lang="ts">
 import { ref, Ref } from "vue";
-import TodoList from "@/components/TodoList/TodoList.vue";
+import TodoList from "@/components/Views/Todo/TodoList/TodoList.vue";
 import { ETodoStatus, ITodo } from "@/interfaces/Todo";
-import TodoForm from "@/components/TodoForm.vue";
+import TodoForm from "@/components/Views/Todo/TodoForm.vue";
 import { useStore } from "vuex";
 
 interface ISetup {
