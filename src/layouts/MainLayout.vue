@@ -23,20 +23,7 @@
           :key="menu.title"
           v-bind="menu"
           :to="'todo'"
-        ></RouteLinkItem>
-
-        <!-- essential link -->
-        <template v-if="essentialLinks.length">
-          <q-item-label header class="text-grey-8">
-            Essential Links
-          </q-item-label>
-
-          <EssentialLink
-            v-for="link in essentialLinks"
-            :key="link.title"
-            v-bind="link"
-          />
-        </template>
+        />
       </q-list>
     </q-drawer>
 
@@ -47,23 +34,14 @@
 </template>
 
 <script lang="ts">
-import EssentialLink from "../components/navigation/EssentialLink.vue";
-import RouteLinkItem from "../components/navigation/RouteLinkItem.vue";
+import RouteLinkItem from "@/components/Nav/RouteLinkItem.vue";
 
-interface IEssentiaLink {
-  title: string;
-  caption?: string;
-  icon: string;
-  link: string;
-}
 interface IMainLink {
   title: string;
   to: string;
   caption?: string;
   icon: string;
 }
-
-const linksList: IEssentiaLink[] = [];
 
 const mainMenu: IMainLink[] = [
   {
@@ -79,7 +57,6 @@ export default defineComponent({
   name: "MainLayout",
 
   components: {
-    EssentialLink,
     RouteLinkItem,
   },
 
@@ -87,7 +64,6 @@ export default defineComponent({
     const leftDrawerOpen = ref(false);
 
     return {
-      essentialLinks: linksList,
       mainMenu: mainMenu,
       leftDrawerOpen,
       toggleLeftDrawer() {
