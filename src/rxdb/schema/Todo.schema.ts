@@ -1,5 +1,6 @@
-import { RxTodoDocumentType } from "@/interfaces/Todo";
 import { RxJsonSchema } from "rxdb";
+import { RxTodoDocumentType } from "../collections/todo.collection";
+
 const TodoSchema: RxJsonSchema<RxTodoDocumentType> = {
   title: "hero schema",
   description: "describes a simple hero",

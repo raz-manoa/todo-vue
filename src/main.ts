@@ -6,7 +6,9 @@ import store from "./store";
 import { Quasar } from "quasar";
 import quasarUserOptions from "./quasar-user-options";
 
+// eslint-disable-next-line
 (window as any).global = window;
+// eslint-disable-next-line
 (window as any).process = {
   env: { DEBUG: undefined },
 };
