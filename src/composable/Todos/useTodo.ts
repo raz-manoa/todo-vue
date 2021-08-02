@@ -1,9 +1,6 @@
-import {
-  ETodoStatus,
-  RxTodoDocument,
-  RxTodosDatabase,
-} from "@/interfaces/Todo";
-import TodoDatabaseService from "@/services/TodoDatabase.service";
+import { ETodoStatus } from "@/interfaces/Todo";
+import { RxTodoDocument } from "@/rxdb/collections/todo.collection";
+import RxDbService from "@/services/RxDB.service";
 
 interface IUseTodo {
   insert: (todoName: string) => Promise<RxTodoDocument | null>;
@@ -12,7 +9,7 @@ interface IUseTodo {
 const useTodo = (): IUseTodo => {
   const insert = async (todoName: string) => {
     try {
-      const db: RxTodosDatabase = await TodoDatabaseService.get();
+      const db = await RxDbService.get();
       const obj = {
         id: todoName,
         name: todoName,

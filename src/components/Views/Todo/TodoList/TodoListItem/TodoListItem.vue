@@ -31,7 +31,8 @@
 
 <script lang="ts">
 import { defineComponent, PropType, Ref, ref } from "vue";
-import { ETodoStatus, RxTodoDocument } from "@/interfaces/Todo";
+import { ETodoStatus } from "@/interfaces/Todo";
+import { RxTodoDocument } from "@/rxdb/collections/todo.collection";
 
 interface ISetup {
   item: Ref<RxTodoDocument>;

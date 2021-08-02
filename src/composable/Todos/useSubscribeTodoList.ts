@@ -1,5 +1,8 @@
-import { RxTodoDocument, RxTodoDocumentType } from "@/interfaces/Todo";
-import TodoDatabaseService from "@/services/TodoDatabase.service";
+import {
+  RxTodoDocument,
+  RxTodoDocumentType,
+} from "@/rxdb/collections/todo.collection";
+import RxDbService from "@/services/RxDB.service";
 import { MangoQuery } from "rxdb";
 import { Subscription } from "rxjs";
 import { tap } from "rxjs/operators";
@@ -19,7 +22,7 @@ const useSubscribeTodoList = (
 
   onMounted(async () => {
     loading.value = true;
-    const db = await TodoDatabaseService.get();
+    const db = await RxDbService.get();
     sub.value = db.todos
       .find(query)
       .$.pipe(

@@ -31,9 +31,9 @@
 
 <script lang="ts">
 import { defineComponent, Ref } from "vue";
-import { RxTodoDocument } from "@/interfaces/Todo";
 import TodoListItem from "./TodoListItem/TodoListItem.vue";
 import useSubscribeTodoList from "@/composable/Todos/useSubscribeTodoList";
+import { RxTodoDocument } from "@/rxdb/collections/todo.collection";
 
 interface ISetup {
   list: Ref<RxTodoDocument[]>;
