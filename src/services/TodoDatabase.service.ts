@@ -10,26 +10,10 @@ import { addPouchPlugin, getRxStoragePouch } from "rxdb/plugins/pouchdb";
 
 // import modules
 import { RxDBDevModePlugin } from "rxdb/plugins/dev-mode";
-
-if (process.env.NODE_ENV === "development") {
-  // in dev-mode we add the dev-mode plugin
-  // which does many checks and adds full error messages
-  addRxPlugin(RxDBDevModePlugin);
-}
-
 import { RxDBValidatePlugin } from "rxdb/plugins/validate";
-addRxPlugin(RxDBValidatePlugin);
-
 import { RxDBLeaderElectionPlugin } from "rxdb/plugins/leader-election";
-addRxPlugin(RxDBLeaderElectionPlugin);
-
 import { RxDBReplicationCouchDBPlugin } from "rxdb/plugins/replication-couchdb";
-addRxPlugin(RxDBReplicationCouchDBPlugin);
-
-// always needed for replication with the node-server
 import * as PouchdbAdapterHttp from "pouchdb-adapter-http";
-addPouchPlugin(PouchdbAdapterHttp);
-
 import * as PouchdbAdapterIdb from "pouchdb-adapter-idb";
 import {
   ETodoStatus,
@@ -39,6 +23,22 @@ import {
   RxTodosDatabase,
 } from "@/interfaces/Todo";
 import TodoSchema from "@/schemas/Todo.schema";
+
+if (process.env.NODE_ENV === "development") {
+  // in dev-mode we add the dev-mode plugin
+  // which does many checks and adds full error messages
+  addRxPlugin(RxDBDevModePlugin);
+}
+
+addRxPlugin(RxDBValidatePlugin);
+
+addRxPlugin(RxDBLeaderElectionPlugin);
+
+addRxPlugin(RxDBReplicationCouchDBPlugin);
+
+// always needed for replication with the node-server
+addPouchPlugin(PouchdbAdapterHttp);
+
 addPouchPlugin(PouchdbAdapterIdb);
 const useAdapter = "idb";
 
@@ -54,13 +54,12 @@ if (window.location.hash === "#nosync") {
  * creates the database
  */
 async function _create(): Promise<RxTodosDatabase> {
-  console.log("DatabaseService: creating database..");
   const db = await createRxDatabase<RxTodosCollections>({
     name: "todos",
     storage: getRxStoragePouch(useAdapter),
     // password: 'myLongAndStupidPassword' // no password needed
   });
-  console.log("DatabaseService: created database");
+
   // eslint-disable-next-line
   (window as any).db = db; // write to window for debugging
 
@@ -71,8 +70,6 @@ async function _create(): Promise<RxTodosDatabase> {
   });
 
   // create collections
-  console.log("DatabaseService: create collections");
-
   await db.addCollections({
     todos: {
       schema: TodoSchema,
@@ -85,7 +82,6 @@ async function _create(): Promise<RxTodosDatabase> {
   });
 
   // hooks
-  console.log("DatabaseService: add hooks");
   db.collections.todos.preInsert((docObj: RxTodoDocumentType) => {
     const name = docObj.name;
     return db.collections.todos
