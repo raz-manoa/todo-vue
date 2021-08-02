@@ -1,5 +1,11 @@
 <template>
-  <q-item v-if="item" tag="label" v-ripple>
+  <q-item
+    v-if="item"
+    tag="label"
+    v-ripple
+    :active="isActive"
+    active-class="active-todo"
+  >
     <q-item-section side top>
       <q-checkbox
         v-model="status"
@@ -30,13 +36,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, Ref, ref } from "vue";
+import {
+  computed,
+  ComputedRef,
+  defineComponent,
+  PropType,
+  Ref,
+  ref,
+} from "vue";
 import { ETodoStatus } from "@/interfaces/Todo";
 import { RxTodoDocument } from "@/rxdb/collections/todo.collection";
 
 interface ISetup {
   item: Ref<RxTodoDocument>;
   status: Ref<ETodoStatus>;
+  isActive: ComputedRef<boolean>;
   ETodoStatus: typeof ETodoStatus;
   handleRemove: () => void;
   handleStatusChange: (a: ETodoStatus) => void;
@@ -54,21 +68,30 @@ export default defineComponent({
     const item = ref<RxTodoDocument>(props.data);
     const status = ref(props.data.status);
     const { emit } = context;
+    const isActive = computed(() => status.value === ETodoStatus.ACTIVE);
 
     return {
       ETodoStatus,
       status,
+      isActive,
       item: item as ISetup["item"],
       handleRemove() {
         emit("remove", item.value);
       },
       async handleStatusChange(data) {
         await item.value.atomicPatch({ status: data });
-        console.log("data", data);
       },
     };
   },
 });
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.q-item {
+  &:not(.active-todo) {
+    .q-item__label {
+      text-decoration: line-through;
+    }
+  }
+}
+</style>

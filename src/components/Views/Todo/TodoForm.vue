@@ -27,7 +27,7 @@ interface ISetup {
 export default defineComponent({
   name: "TodoForm",
   setup(): ISetup {
-    const $q = useQuasar();
+    const { notify } = useQuasar();
     const { insert } = useTodo();
 
     const name = ref<string>("");
@@ -39,14 +39,16 @@ export default defineComponent({
     return {
       name,
       async onSubmit() {
-        await insert(name.value);
+        const item = await insert(name.value);
 
-        //
-        $q.notify({
-          icon: "success",
-          message: name.value,
-        });
-        onReset();
+        if (item) {
+          onReset();
+        } else {
+          notify({
+            type: "negative",
+            message: "Error during creation",
+          });
+        }
       },
 
       onReset,

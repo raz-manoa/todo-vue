@@ -2,12 +2,15 @@
   <div>
     <q-list bordered padding>
       <template v-if="!loading">
-        <TodoListItem
-          v-for="item in list"
-          :key="item.id"
-          :data="item"
-          @remove="handleRemoveItem"
-        />
+        <template v-if="list.length">
+          <TodoListItem
+            v-for="item in list"
+            :key="item.id"
+            :data="item"
+            @remove="handleRemoveItem"
+          />
+        </template>
+        <Empty v-else />
       </template>
       <template v-else>
         <q-item>
@@ -34,6 +37,7 @@ import { defineComponent, Ref } from "vue";
 import TodoListItem from "./TodoListItem/TodoListItem.vue";
 import useSubscribeTodoList from "@/composable/Todos/useSubscribeTodoList";
 import { RxTodoDocument } from "@/rxdb/collections/todo.collection";
+import Empty from "@/components/Feedback/Empty/Empty.vue";
 
 interface ISetup {
   list: Ref<RxTodoDocument[]>;
@@ -42,7 +46,7 @@ interface ISetup {
 }
 
 export default defineComponent({
-  components: { TodoListItem },
+  components: { TodoListItem, Empty },
   name: "TodoList",
   setup(): ISetup {
     const { loading, list } = useSubscribeTodoList({
@@ -56,7 +60,6 @@ export default defineComponent({
       loading,
       handleRemoveItem: async (item) => {
         await item.remove();
-        console.log("remove item", item.name);
       },
     };
   },
