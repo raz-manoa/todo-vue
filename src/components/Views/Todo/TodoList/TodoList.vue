@@ -30,12 +30,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onUnmounted, Ref, ref } from "vue";
+import { defineComponent, Ref } from "vue";
 import { RxTodoDocument } from "@/interfaces/Todo";
 import TodoListItem from "./TodoListItem/TodoListItem.vue";
-import TodoDatabaseService from "@/services/TodoDatabase.service";
-import { tap } from "rxjs/operators";
-import { Subscription } from "rxjs";
+import useSubscribeTodoList from "@/composable/Todos/useSubscribeTodoList";
 
 interface ISetup {
   list: Ref<RxTodoDocument[]>;
@@ -47,32 +45,9 @@ export default defineComponent({
   components: { TodoListItem },
   name: "TodoList",
   setup(): ISetup {
-    const loading = ref(false);
-    const list = ref<RxTodoDocument[]>([]);
-    const sub = ref<Subscription | null>(null);
-
-    onMounted(async () => {
-      loading.value = true;
-      const db = await TodoDatabaseService.get();
-      sub.value = db.todos
-        .find({
-          selector: {},
-          sort: [{ name: "asc" }],
-        })
-        .$.pipe(
-          tap(() => {
-            // debounce to simulate slow load
-            setTimeout(() => (loading.value = false), 1000);
-          })
-        )
-        .subscribe((todos) => {
-          list.value = todos;
-        });
-    });
-    onUnmounted(() => {
-      if (sub.value) {
-        sub.value.unsubscribe();
-      }
+    const { loading, list } = useSubscribeTodoList({
+      selector: {},
+      sort: [{ name: "asc" }],
     });
 
     return {

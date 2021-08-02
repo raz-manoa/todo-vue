@@ -43,7 +43,7 @@ export default defineComponent({
 
         //
         $q.notify({
-          icon: "warning",
+          icon: "success",
           message: name.value,
         });
         onReset();
