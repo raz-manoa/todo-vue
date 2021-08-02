@@ -2,7 +2,8 @@
   <q-item v-if="item" tag="label" v-ripple>
     <q-item-section side top>
       <q-checkbox
-        v-model="item.status"
+        v-model="status"
+        @update:model-value="handleStatusChange"
         :true-value="ETodoStatus.COMPLETED"
         :false-value="ETodoStatus.ACTIVE"
       />
@@ -34,8 +35,10 @@ import { ETodoStatus, RxTodoDocument } from "@/interfaces/Todo";
 
 interface ISetup {
   item: Ref<RxTodoDocument>;
+  status: Ref<ETodoStatus>;
   ETodoStatus: typeof ETodoStatus;
   handleRemove: () => void;
+  handleStatusChange: (a: ETodoStatus) => void;
 }
 
 export default defineComponent({
@@ -48,13 +51,19 @@ export default defineComponent({
   },
   setup(props, context): ISetup {
     const item = ref<RxTodoDocument>(props.data);
+    const status = ref(props.data.status);
     const { emit } = context;
 
     return {
       ETodoStatus,
+      status,
       item: item as ISetup["item"],
       handleRemove() {
         emit("remove", item.value);
+      },
+      async handleStatusChange(data) {
+        await item.value.atomicPatch({ status: data });
+        console.log("data", data);
       },
     };
   },

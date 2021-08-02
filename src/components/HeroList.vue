@@ -18,7 +18,8 @@
             class="fa fa-pencil-square-o"
             aria-hidden="true"
             v-on:click="editHero(hero)"
-          ></i>
+            >Edit</i
+          >
           <i
             class="fa fa-trash-o"
             aria-hidden="true"
