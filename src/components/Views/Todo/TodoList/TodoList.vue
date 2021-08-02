@@ -54,8 +54,8 @@ export default defineComponent({
       // eslint-disable-next-line
       list: list as ISetup["list"],
       loading,
-      handleRemoveItem: (item) => {
-        item.remove();
+      handleRemoveItem: async (item) => {
+        await item.remove();
         console.log("remove item", item.name);
       },
     };
